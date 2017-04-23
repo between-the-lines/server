@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="form">
+		<input type="" name="hash" id="input">
+		<button id="btn">Search</button>
+	</div>
+	<table>
+		<thead>
+			<tr>
+				<td>Tweet</td>
+				<td>Author</td>
+			</tr>
+		</thead>
+		<tbody id="tbody">
+			
+		</tbody>
+	</table>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+	<script>
+		(function () {
+			const $tbody = document.querySelector('#tbody');
+			const $btn = document.querySelector('#btn');
+			const DOMAIN = 'http://localhost:3000';
+		
+			$btn.addEventListener('click', onSearch);
+
+			function unshift(tweet) {
+				$tbody.innerHTML = (
+					`<tr>
+						<td>${tweet.text}</td>
+						<td>${tweet.name}</td>
+					</tr>`
+				) + $tbody.innerHTML;
+			}
+
+		  	function track(query) {
+		  		const _io = io(DOMAIN, {
+					query: `track=${query}`
+				});
+				const socket = _io.connect();
+
+				socket.on(`track:${query}`, unshift);
+		  	}
+
+			function onSearch() {
+				document.querySelector('#form').style.display = 'none';
+				const $tbody = document.querySelector('#tbody');
+				const $input = document.querySelector('#input');
+				const query = $input.value;
+				
+				fetch(`${DOMAIN}/search?q=${query}`)
+					.then(response => response.json())
+					.then(data => {
+						data.forEach(unshift);
+						
+						track(query);
+
+						return data;
+					});
+			}
+		}());
+	</script>
+</body>
+</html>

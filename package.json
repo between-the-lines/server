@@ -1,0 +1,19 @@
+{
+  "name": "projx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start:dev": "nodemon ./app",
+    "start": "node ./app"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.3",
+    "express": "^4.15.2",
+    "mongoose": "^4.9.5",
+    "socket.io": "^1.7.3",
+    "twitter": "^1.7.0"
+  }
+}
